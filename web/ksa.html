@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenya Scout Association - St. Gertrude Kinthithe Secondary School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #007a33; /* Scout green background */
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+
+        section {
+            background: #ff0000;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        h3 {
+            color: #007a33; /* Scout green text */
+        }
+
+        p {
+            line-height: 1.6;
+            color: #ffcc00;
+        }
+
+        .photo {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .photo img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .motto {
+            background-color: #ffcc00; /* Scout yellow */
+            color: #007a33;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+
+        .activity-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .activity-list li {
+            background: #ffcc00; /* Scout yellow background */
+            color: #007a33;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        .download-button {
+            background-color: #007a33; /* Green background */
+            color: white;
+            padding: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .download-button:hover {
+            background-color: #005f27; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Kenya Scout Association - St. Gertrude Kinthithe Secondary School</h1>
+        <p>Karurumo, Runyenjes, Embu County</p>
+        <button class="download-button" onclick="redirectToHome()">Home</button>
+    </div>
+
+    <div class="container">
+        <section id="leaders">
+            <h2>Scout Leadership</h2>
+            <div>
+                <h3>Scout Commander: Cosphat Micheni</h3>
+                <p>Cosphat Micheni leads the scouts with dedication and enthusiasm, ensuring that all members are well-prepared for their activities and responsibilities.</p>
+            </div>
+            <div>
+                <h3>Scout Leader: Joseph Njoroge</h3>
+                <p>Joseph Njoroge supports the scout troop by organizing events and activities that foster teamwork, discipline, and community service.</p>
+            </div>
+        </section>
+
+        <section id="motto">
+            <div class="motto">
+                <h2>Motto: BE PREPARED</h2>
+               
+            </div>
+        </section>
+
+        <section id="activities">
+            <h2>Scout Activities</h2>
+            <ul class="activity-list">
+                <li>Tree Planting</li>
+                <li>Camping</li>
+                <li>Scout Competitions</li>
+                <li>Community Work</li>
+                <li>Flag Raising</li>
+            </ul>
+        </section>
+
+        <section id="photo">
+            <div class="photo">
+                <h2>Scout Activities Photo</h2>
+                <img src="path_to_photo.jpg" alt="Scouts in action"> <!-- Replace with the actual path to the photo -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function redirectToHome() {
+            window.location.href = 'index.html'; // Update with your actual home page URL
+        }
+    </script>
+
+</body>
+</html>
