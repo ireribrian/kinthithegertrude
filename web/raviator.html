@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #0077be;
+            color: #ffffff;
+        }
+        #plane {
+            font-size: 50px;
+            margin-top: 20px;
+            position: relative;
+        }
+        #multiplier {
+            font-size: 30px;
+            margin: 20px;
+        }
+        #betAmount, #placeBetButton, #cashOutButton {
+            margin: 10px;
+            padding: 10px;
+            font-size: 20px;
+        }
+        #message {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #nextRound {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        #accountBalance {
+            font-size: 20px;
+            margin: 10px;
+        }
+        .trail {
+            color: #ffa500;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aviator Game ✈️</h1>
+    <div id="accountBalance">Balance: $200.00</div>
+    <div id="plane">🚀</div>
+    <div id="multiplier">Multiplier: 1x</div>
+    <input type="number" id="betAmount" placeholder="Enter bet amount" min="10" />
+    <button id="placeBetButton">Place Bet</button>
+    <button id="cashOutButton" disabled>Cash Out</button>
+    <div id="message"></div>
+    <div id="nextRound"></div>
+
+    <script>
+        let multiplier = 1;
+        let interval;
+        let betPlaced = false;
+        let planeCrashed = false;
+        let countdownInterval;
+        let trailElements = [];
+        const maxTrail = 20;
+        let balance = 200;
+
+        function startGame() {
+            betPlaced = false;
+            planeCrashed = false;
+            multiplier = 1;
+            document.getElementById('betAmount').disabled = false;
+            document.getElementById('placeBetButton').disabled = false;
+            document.getElementById('cashOutButton').disabled = true;
+            document.getElementById('message').innerText = '';
+            document.getElementById('nextRound').innerText = '';
+            document.getElementById('multiplier').innerText = 'Multiplier: 1x';
+            document.getElementById('plane').style.transform = 'translateY(0)';
+            clearTrail();
+        }
+
+        function updateMultiplier() {
+            if (Math.random() < getCrashProbability(multiplier)) {
+                clearInterval(interval);
+                planeCrashed = true;
+                document.getElementById('message').innerText = 'Plane flew away! You lose.';
+                document.getElementById('message').style.color = 'red';
+                let betAmount = parseFloat(document.getElementById('betAmount').value);
+                balance -= betAmount;
+                updateBalance();
+                resetGame();
+            } else {
+                multiplier += 0.1 * multiplier; // Exponential increase
+                if (multiplier > 30) {
+                    multiplier = 30;
+                }
+                document.getElementById('multiplier').innerText = 'Multiplier: ' + multiplier.toFixed(2) + 'x';
+                updatePlanePosition();
+                addTrail();
+            }
+        }
+
+        function getCrashProbability(multiplier) {
+            if (multiplier < 5) {
+                return 1 / (10 + multiplier); // Higher chance of crashing between 2x-4x
+            } else if (multiplier < 10) {
+                return 1 / (20 + multiplier);
+            } else {
+                return 1 / (50 + multiplier);
+            }
+        }
+
+        function resetGame() {
+            clearInterval(interval);
+            document.getElementById('betAmount').disabled = true;
+            document.getElementById('placeBetButton').disabled = true;
+            document.getElementById('cashOutButton').disabled = true;
+            startCountdown();
+        }
+
+        function startCountdown() {
+            let countdown = 5;
+            document.getElementById('nextRound').innerText = 'Next round in: ' + countdown;
+            countdownInterval = setInterval(() => {
+                countdown--;
+                document.getElementById('nextRound').innerText = 'Next round in: ' + countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    startGame();
+                }
+            }, 1000);
+        }
+
+        function updatePlanePosition() {
+            const planeElement = document.getElementById('plane');
+            let newY = parseFloat(planeElement.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
+            newY -= 2; // Decreased movement to slow down the plane
+            planeElement.style.transform = `translateY(${newY}px)`;
+        }
+
+        function addTrail() {
+            const trail = document.createElement('div');
+            trail.className = 'trail';
+            trail.innerText = '.';
+            document.body.appendChild(trail);
+            trailElements.push(trail);
+
+            if (trailElements.length > maxTrail) {
+                const oldTrail = trailElements.shift();
+                document.body.removeChild(oldTrail);
+            }
+
+            trailElements.forEach((el, index) => {
+                el.style.transform = `translateY(${index * -10}px)`;
+            });
+        }
+
+        function clearTrail() {
+            trailElements.forEach(el => document.body.removeChild(el));
+            trailElements = [];
+        }
+
+        function updateBalance() {
+            document.getElementById('accountBalance').innerText = 'Balance: $' + balance.toFixed(2);
+        }
+
+        document.getElementById('placeBetButton').addEventListener('click', function() {
+            let betAmount = parseFloat(document.getElementById('betAmount').value);
+            if (!betPlaced && betAmount >= 10 && betAmount <= balance) {
+                betPlaced = true;
+                document.getElementById('betAmount').disabled = true;
+                document.getElementById('placeBetButton').disabled = true;
+                document.getElementById('cashOutButton').disabled = false;
+                interval = setInterval(updateMultiplier, 300); // Increased interval to slow down updates
+            } else {
+                alert("Invalid bet amount. Minimum bet is $10.");
+            }
+        });
+
+        document.getElementById('cashOutButton').addEventListener('click', function() {
+            if (betPlaced && !planeCrashed) {
+                clearInterval(interval);
+                let betAmount = parseFloat(document.getElementById('betAmount').value);
+                let winnings = betAmount * multiplier;
+                document.getElementById('message').innerText = 'You cashed out! You win: $' + winnings.toFixed(2);
+                document.getElementById('message').style.color = 'green';
+                balance += winnings - betAmount;
+                updateBalance();
+                betPlaced = false;
+                document.getElementById('cashOutButton').disabled = true;
+                resetGame();
+            }
+        });
+
+        updateBalance();
+        startGame();
+    </script>
+    <footer>
+        Created by Ireri arts™
+    </footer>
+</body>
+</html>
